@@ -1,12 +1,3 @@
-# WebService Gestione Formazione
-
-## Diagramma E/R
-
-[Diagramma E/R](./db-server/ModelloER.png)
-
-## Script SQL creazione database
-
-```
 drop database if exists gestionecorsisicurezza;
 create database gestionecorsisicurezza;
 use gestionecorsisicurezza;
@@ -229,5 +220,3 @@ id int not null auto_increment primary key,
 datetime datetime not null,
 descrizione varchar(1000) not null,
 );
-```
-

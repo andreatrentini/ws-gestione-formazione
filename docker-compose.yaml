@@ -1,0 +1,57 @@
+version: 3.9
+
+secrets:
+  - admin_secret:
+      file: ./admin_secret
+  - init_secret:
+      file: ./init_secret
+  - root_db_password:
+      file: ./root_db_password
+
+networks:
+  - ws-db-net:
+      driver: bridge
+  - ws-proxy-net:
+      driver: bridge
+  - ws-app-net:
+      driver: bridge
+
+volumes:
+  - db-data:
+      driver: local
+  - ws-app:
+      driver: local
+  - proxy-conf:
+      driver: local
+  - web-app:
+      driver: local
+
+services:
+  db:
+    image: mysql:latest
+    container_name: db-server
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root_db_password
+    networks:
+      - ws-db-net
+    secrets:
+      - root_db_password
+
+  ws:
+    image: node:latest
+    container_name: ws-server
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - ws-db-net
+    volumes:
+      - ./ws-server:/app
+    working_dir: /app
+    secrets:
+      - admin_secret
+      - init_secret
+      - root_db_password
